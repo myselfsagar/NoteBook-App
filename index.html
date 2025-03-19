@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notebook App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <h1>NoteBook</h1>
+      <input type="text" id="search" placeholder="Search Notes..." />
+      <div>
+        <span id="totalNotes">Total Notes: 0</span>
+        <span id="showingNotes">Showing: 0</span>
+      </div>
+      <div class="note-input">
+        <input type="text" id="noteTitle" placeholder="Note Title" />
+        <textarea id="noteDesc" placeholder="Note Description"></textarea>
+        <button id="addNote">Add To Book</button>
+      </div>
+      <div id="notes"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.8.3/axios.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
