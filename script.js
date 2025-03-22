@@ -1,6 +1,5 @@
-// app.js
 const baseUrl =
-  "https://crudcrud.com/api/2c1f2510f1b3429a894c6b14eb5829ad/notes"; // Replace with your unique endpoint
+  "https://crudcrud.com/api/6d5334e861c4472ea1f78de0b45e360b/notes";
 const notesContainer = document.getElementById("notes");
 const totalNotesSpan = document.getElementById("totalNotes");
 const showingNotesSpan = document.getElementById("showingNotes");
