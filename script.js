@@ -1,16 +1,48 @@
-const baseUrl =
-  "https://crudcrud.com/api/6d5334e861c4472ea1f78de0b45e360b/notes";
+const baseUrl = "https://crudcrud.com/api/YOUR_UNIQUE_ENDPOINT/notes"; // Replace with your CRUD CRUD unique endpoint
 const notesContainer = document.getElementById("notes");
 const totalNotesSpan = document.getElementById("totalNotes");
 const showingNotesSpan = document.getElementById("showingNotes");
 let notes = [];
+
+// Utility function to update counters
+function updateCounters(totalNotes, showingNotes) {
+  totalNotesSpan.textContent = `Total Notes: ${totalNotes}`;
+  showingNotesSpan.textContent = `Showing: ${showingNotes}`;
+}
+
+// Utility function to append a note to the DOM
+function appendNoteToDOM(note) {
+  const noteElement = document.createElement("div");
+  noteElement.classList.add("note");
+  noteElement.setAttribute("data-id", note._id);
+
+  const titleElement = document.createElement("div");
+  titleElement.classList.add("note-title");
+  titleElement.textContent = note.title;
+
+  const descElement = document.createElement("p");
+  descElement.textContent = note.description;
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "DELETE";
+  deleteButton.onclick = () => deleteNote(note._id, noteElement);
+
+  noteElement.appendChild(titleElement);
+  noteElement.appendChild(descElement);
+  noteElement.appendChild(deleteButton);
+
+  notesContainer.appendChild(noteElement);
+}
 
 // Fetch notes from CRUD CRUD
 async function fetchNotes() {
   try {
     const response = await axios.get(baseUrl);
     notes = response.data;
-    displayNotes();
+
+    notesContainer.innerHTML = ""; // Clear the current notes
+    notes.forEach((note) => appendNoteToDOM(note)); // Add all notes to the DOM
+    updateCounters(notes.length, notes.length);
   } catch (error) {
     console.error("Error fetching notes:", error);
   }
@@ -27,7 +59,10 @@ async function addNote() {
     try {
       const response = await axios.post(baseUrl, newNote);
       notes.push(response.data);
-      displayNotes();
+      appendNoteToDOM(response.data); // Add the new note to the DOM
+      updateCounters(notes.length, notesContainer.childElementCount);
+
+      // Clear the input fields
       document.getElementById("noteTitle").value = "";
       document.getElementById("noteDesc").value = "";
     } catch (error) {
@@ -37,60 +72,47 @@ async function addNote() {
 }
 
 // Delete a note
-async function deleteNote(id) {
+async function deleteNote(id, noteElement) {
   try {
     await axios.delete(`${baseUrl}/${id}`);
     notes = notes.filter((note) => note._id !== id);
-    displayNotes();
+    noteElement.remove(); // Remove the note from the DOM
+    updateCounters(notes.length, notesContainer.childElementCount);
   } catch (error) {
     console.error("Error deleting note:", error);
   }
 }
 
-// Search notes
+// Search notes dynamically
 function searchNotes() {
   const query = document.getElementById("search").value.toLowerCase();
-  const filteredNotes = notes.filter(
-    (note) =>
-      note.title.toLowerCase().includes(query) ||
-      note.description.toLowerCase().includes(query)
-  );
-  displayNotes(filteredNotes);
-}
 
-// Display notes dynamically
-function displayNotes(filteredNotes = notes) {
-  notesContainer.innerHTML = "";
-  filteredNotes.forEach((note) => {
-    const noteElement = document.createElement("div");
-    noteElement.classList.add("note");
+  // Get all note elements
+  const allNotes = document.querySelectorAll(".note");
 
-    const titleElement = document.createElement("div");
-    titleElement.classList.add("note-title");
-    titleElement.textContent = note.title;
+  allNotes.forEach((note) => {
+    const noteTitle = note
+      .querySelector(".note-title")
+      .textContent.toLowerCase();
+    const noteDescription = note.querySelector("p").textContent.toLowerCase();
 
-    const descElement = document.createElement("p");
-    descElement.textContent = note.description;
-
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "DELETE";
-    deleteButton.onclick = () => deleteNote(note._id);
-
-    noteElement.appendChild(titleElement);
-    noteElement.appendChild(descElement);
-    noteElement.appendChild(deleteButton);
-
-    notesContainer.appendChild(noteElement);
+    if (noteTitle.includes(query) || noteDescription.includes(query)) {
+      note.style.display = ""; // Keep default style
+    } else {
+      note.style.display = "none"; // Hide the note
+    }
   });
 
-  // Update counters
-  totalNotesSpan.textContent = `Total Notes: ${notes.length}`;
-  showingNotesSpan.textContent = `Showing: ${filteredNotes.length}`;
+  // Update "Showing" counter
+  const showingCount = Array.from(allNotes).filter(
+    (note) => note.style.display !== "none"
+  ).length;
+  showingNotesSpan.textContent = `Showing: ${showingCount}`;
 }
 
 // Event listeners
 document.getElementById("addNote").addEventListener("click", addNote);
 document.getElementById("search").addEventListener("input", searchNotes);
 
-// Initial fetch
+// Fetch notes on page load
 fetchNotes();
