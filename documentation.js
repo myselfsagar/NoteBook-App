@@ -1,18 +1,38 @@
+/**
+ * Notebook App Documentation
+ * ---------------------------
+ * This file contains documentation for the Notebook App.
+ * The application allows users to create, search, and manage notes with a CRUD backend.
+ * Axios is used to interact with a CRUD API endpoint.
+ */
+
+// CRUD API base URL
 const API_BASE_URL =
   "https://crudcrud.com/api/e53918ece15b4c00b37491f647ae83b6/notes";
 
-const notesContainer = document.getElementById("notes");
-const totalNotesSpan = document.getElementById("total-notes");
-const showingNotesSpan = document.getElementById("showing-notes");
+// DOM elements
+const notesContainer = document.getElementById("notes"); // Container for notes
+const totalNotesSpan = document.getElementById("total-notes"); // Total notes counter
+const showingNotesSpan = document.getElementById("showing-notes"); // Showing notes counter
+
+// Local state for notes
 let notes = [];
 
-// Utility function to update counters
+/**
+ * Updates the counters displayed in the UI.
+ * @param {number} totalNotes - Total number of notes.
+ * @param {number} showingNotes - Number of notes currently being displayed.
+ */
 function updateCounters(totalNotes, showingNotes) {
   totalNotesSpan.textContent = `Total Notes: ${totalNotes}`;
   showingNotesSpan.textContent = `Showing: ${showingNotes}`;
 }
 
-// Delete a note
+/**
+ * Deletes a note from the backend and updates the UI.
+ * @param {string} id - Unique identifier of the note.
+ * @param {HTMLElement} noteElement - HTML element corresponding to the note.
+ */
 async function deleteNote(id, noteElement) {
   try {
     await axios.delete(`${API_BASE_URL}/${id}`);
@@ -24,7 +44,10 @@ async function deleteNote(id, noteElement) {
   }
 }
 
-// Utility function to append a note to the DOM
+/**
+ * Adds a note element to the DOM.
+ * @param {Object} note - Note object containing title and description.
+ */
 function appendNoteToDOM(note) {
   const noteElement = document.createElement("div");
   noteElement.classList.add("note");
@@ -48,7 +71,9 @@ function appendNoteToDOM(note) {
   notesContainer.appendChild(noteElement);
 }
 
-// Fetch notes from CRUD CRUD
+/**
+ * Fetches notes from the backend and updates the UI.
+ */
 async function fetchNotes() {
   try {
     const response = await axios.get(API_BASE_URL);
@@ -62,7 +87,9 @@ async function fetchNotes() {
   }
 }
 
-// Search notes
+/**
+ * Filters notes based on a search query and updates the UI.
+ */
 function searchNotes() {
   const query = document.getElementById("search").value.toLowerCase();
 
@@ -76,7 +103,7 @@ function searchNotes() {
     const noteDescription = note.querySelector("p").textContent.toLowerCase();
 
     if (noteTitle.includes(query) || noteDescription.includes(query)) {
-      note.style.display = ""; // Keep default style
+      note.style.display = ""; // Show the note
     } else {
       note.style.display = "none"; // Hide the note
     }
@@ -89,7 +116,9 @@ function searchNotes() {
   showingNotesSpan.textContent = `Showing: ${showingCount}`;
 }
 
-// Add a new note
+/**
+ * Adds a new note to the backend and UI.
+ */
 async function addNote() {
   const title = document.getElementById("note-title").value;
   const desc = document.getElementById("note-description").value;
@@ -112,9 +141,11 @@ async function addNote() {
   }
 }
 
-// Event listeners
-document.getElementById("add-note").addEventListener("click", addNote);
-document.getElementById("search").addEventListener("input", searchNotes);
+// Event listeners for interactivity
+document.getElementById("add-note").addEventListener("click", addNote); // Add note button
+document.getElementById("search").addEventListener("input", searchNotes); // Search input
 
-// Fetch notes on page load
+/**
+ * Initializes the application by fetching notes on page load.
+ */
 document.addEventListener("DOMContentLoaded", fetchNotes);

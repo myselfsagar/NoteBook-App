@@ -28,10 +28,18 @@ textarea {
 
 button {
   padding: 10px 20px;
-  background-color: blue;
   color: white;
   border: none;
   cursor: pointer;
+  border-radius: 4px;
+}
+
+#add-note {
+  background-color: #0000ff;
+}
+
+#add-note:hover {
+  background-color: #0000dd;
 }
 
 #notes {
@@ -49,8 +57,9 @@ button {
 }
 
 .note button {
-  background-color: red;
-  color: white;
-  border: none;
-  cursor: pointer;
+  background-color: #ff0000;
+}
+
+.note button:hover {
+  background-color: #dd0000;
 }

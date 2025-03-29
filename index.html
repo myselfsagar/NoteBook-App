@@ -16,17 +16,21 @@
           placeholder="Search notes by title or description..."
         />
         <div>
-          <span id="totalNotes">Total Notes: 0</span>
-          <span id="showingNotes">Showing: 0</span>
+          <span id="total-notes">Total Notes: 0</span>
+          <span id="showing-notes">Showing: 0</span>
         </div>
       </div>
       <div class="form">
-        <input type="text" id="noteTitle" placeholder="Note Title" />
-        <textarea id="noteDesc" placeholder="Note Description"></textarea>
-        <button id="addNote">Add Note</button>
+        <input type="text" id="note-title" placeholder="Note Title" />
+        <textarea
+          id="note-description"
+          placeholder="Note Description"
+        ></textarea>
+        <button id="add-note" type="submit">Add Note</button>
       </div>
       <div id="notes"></div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.8.3/axios.min.js"></script>
     <script src="script.js"></script>
   </body>
